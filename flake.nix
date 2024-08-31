@@ -15,7 +15,7 @@
           inherit system;
         };
       in {
-        packages = {
+        packages = rec {
           c = pkgs.runCommand "c" {} ''
             mkdir $out
             for WALLPAPER in $(find ./wallpapers -type f)
@@ -55,17 +55,19 @@
               runHook postInstall
             '';
           };
-          default = pkgs.writeShellApplication {
-            name = "lut";
-            runtimeInputs = with pkgs; [lutgen findutils coreutils];
-            text = ''
-              rm -r ./lut_wallpapers
-              mkdir -p ./lut_wallpapers
-              find ./wallpapers -type f -exec ${pkgs.lutgen}/bin/lutgen apply {} -p catppuccin-mocha -o ./lut_wallpapers/{} \;
-              mv ./lut_wallpapers/wallpapers/* ./lut_wallpapers
-              rm -r ./lut_wallpapers/wallpapers
-            '';
-          };
+          default = a;
+          # default = pkgs.writeShellApplication {
+          #   name = "lut";
+          #   runtimeInputs = with pkgs; [lutgen findutils coreutils];
+          #   text = ''
+          #     rm -r ./lut_wallpapers
+          #     mkdir -p ./lut_wallpapers
+          #     find ./wallpapers -type f -exec ${pkgs.lutgen}/bin/lutgen apply {} -p catppuccin-mocha -o ./lut_wallpapers/{} \;
+          #     mv ./lut_wallpapers/wallpapers/* ./lut_wallpapers
+          #     rm -r ./lut_wallpapers/wallpapers
+          #   '';
+          # };
+
           # pkgs.runCommand "prism" {} ''
           #   mkdir $out/lut_wallpapers
           #   for WALLPAPER in $(find ${cfg.wallpapers} -type f)
